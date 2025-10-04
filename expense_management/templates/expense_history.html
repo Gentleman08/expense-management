@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>Expense History</title></head>
+<body>
+    <h2>Your Expense History</h2>
+    <table border="1">
+        <tr>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Status</th>
+        </tr>
+        {% for expense in expenses %}
+        <tr>
+            <td>{{ expense.date }}</td>
+            <td>{{ expense.category }}</td>
+            <td>{{ expense.amount }}</td>
+            <td>{{ expense.currency }}</td>
+            <td>{{ expense.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

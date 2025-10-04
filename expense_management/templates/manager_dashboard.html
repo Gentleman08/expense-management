@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>Manager Dashboard</title></head>
+<body>
+    <h2>Pending Expense Approvals</h2>
+    <table border="1">
+        <tr>
+            <th>Submitter</th>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Actions</th>
+        </tr>
+        {% for expense in pending_expenses %}
+        <tr>
+            <td>{{ expense.submitter.username }}</td>
+            <td>{{ expense.date }}</td>
+            <td>{{ expense.category }}</td>
+            <td>{{ expense.amount }}</td>
+            <td>{{ expense.currency }}</td>
+            <td>
+                <a href="{% url 'approve_expense' expense.id %}">Approve</a> |
+                <a href="{% url 'reject_expense' expense.id %}">Reject</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
