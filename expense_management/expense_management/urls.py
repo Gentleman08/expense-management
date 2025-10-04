@@ -15,8 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
+    # Optional: Set the user app as the default root for certain paths (like the main page)
+    # The login and registration paths will now also work at /login/ and /register/
+    path('', include('users.urls')), 
+
+    # Django admin interface
     path('admin/', admin.site.urls),
+    
+    # All user/authentication URLs are delegated to the 'users' app
+    # This path is still necessary if you want /users/login/ to work
+    path('users/', include('users.urls')), 
 ]
+
