@@ -28,5 +28,6 @@ urlpatterns = [
     # All user/authentication URLs are delegated to the 'users' app
     # This path is still necessary if you want /users/login/ to work
     path('users/', include('users.urls')), 
+    path('manager/', include('manager.urls')),  
 ]
 

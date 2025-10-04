@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     
     # Existing field
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='EMPLOYEE')
+    manager = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='team_members')
 
     # NEW FIELD 1: Phone Number (matches form)
     phone_number = models.CharField(

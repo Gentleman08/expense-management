@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Submit Expense</title></head>
+<body>
+    <h2>Submit Expense Claim</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    <p><a href="{% url 'expense_history' %}">View Expense History</a></p>
+</body>
+</html>

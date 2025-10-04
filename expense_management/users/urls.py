@@ -8,4 +8,6 @@ urlpatterns = [
     
     # path is: /users/login/ (when combined with project-level urls)
     path('login/', UserLoginView.as_view(), name='login'),
+    # path('dashboard/', dashboard, name='dashboard'),
+
 ]
