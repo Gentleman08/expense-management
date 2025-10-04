@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Expense History</title>
+</head>
+<body>
+    <h2>My Expense History</h2>
+    <ul>
+        {% for expense in expenses %}
+        <li>
+            {{ expense.date }} - {{ expense.description }} - {{ expense.amount }} {{ expense.currency }}
+            (Status: {{ expense.get_status_display }})
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manager Dashboard</title>
+</head>
+<body>
+    <h2>Expenses Pending My Approval</h2>
+    {% if pending_expenses %}
+    <ul>
+        {% for expense in pending_expenses %}
+        <li>
+            {{ expense.submitter.username }} submitted an expense for {{ expense.amount }} {{ expense.currency }}.
+            <br>
+            <a href="{% url 'approve_expense' expense.id %}">Approve</a> |
+            <a href="{% url 'reject_expense' expense.id %}">Reject</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No expenses pending approval.</p>
+    {% endif %}
+</body>
+</html>
