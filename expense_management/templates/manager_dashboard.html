@@ -1,30 +1,148 @@
 <!DOCTYPE html>
-<html>
-<head><title>Manager Dashboard</title></head>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CSS for a consistent dark theme and table styling */
+        :root {
+            --color-bg-body: #0f172a;
+            --color-bg-card: #1e293b;
+            --color-text-body: #e2e8f0;
+            --color-text-header: #94a3b8;
+            --color-text-accent: #f8fafc;
+            --color-link-accent: #34d399; /* Emerald */
+            --color-link-approve: #22c55e; /* Green */
+            --color-link-reject: #ef4444; /* Red */
+            --color-table-border: #334155;
+            --color-table-header-bg: #1e293b;
+            --color-table-row-even: #1e293b;
+            --color-table-row-odd: #121e2c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg-body);
+            color: var(--color-text-body);
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            background-color: var(--color-bg-card);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #34d399; /* Emerald */
+            margin-bottom: 1.5rem;
+        }
+        
+        .expense-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .expense-table th,
+        .expense-table td {
+            padding: 1rem;
+            border: 1px solid var(--color-table-border);
+            text-align: left;
+        }
+
+        .expense-table th {
+            background-color: var(--color-table-header-bg);
+            color: var(--color-text-accent);
+            font-weight: 600;
+        }
+
+        .expense-table tr:nth-child(even) {
+            background-color: var(--color-table-row-even);
+        }
+
+        .expense-table tr:hover {
+            background-color: #334155; /* Slate-700 */
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .action-links a {
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+
+        .action-links .approve-link {
+            color: var(--color-link-approve);
+        }
+
+        .action-links .reject-link {
+            color: var(--color-link-reject);
+        }
+
+        .text-subtle {
+            color: var(--color-text-header);
+        }
+    </style>
+</head>
 <body>
-    <h2>Pending Expense Approvals</h2>
-    <table border="1">
-        <tr>
-            <th>Submitter</th>
-            <th>Date</th>
-            <th>Category</th>
-            <th>Amount</th>
-            <th>Currency</th>
-            <th>Actions</th>
-        </tr>
-        {% for expense in pending_expenses %}
-        <tr>
-            <td>{{ expense.submitter.username }}</td>
-            <td>{{ expense.date }}</td>
-            <td>{{ expense.category }}</td>
-            <td>{{ expense.amount }}</td>
-            <td>{{ expense.currency }}</td>
-            <td>
-                <a href="{% url 'approve_expense' expense.id %}">Approve</a> |
-                <a href="{% url 'reject_expense' expense.id %}">Reject</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="container">
+        <div class="text-center">
+            <h2>Pending Expense Approvals</h2>
+        </div>
+        
+        <table class="expense-table">
+            <thead>
+                <tr>
+                    <th>Submitter</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in pending_expenses %}
+                <tr>
+                    <td>{{ expense.submitter.username }}</td>
+                    <td>{{ expense.date|date:"F j, Y" }}</td>
+                    <td>{{ expense.category }}</td>
+                    <td>{{ expense.amount|floatformat:2 }} {{ expense.currency }}</td>
+                    <td class="action-links">
+                        <a href="{% url 'approve_expense' expense.id %}" class="approve-link">Approve</a> |
+                        <a href="{% url 'reject_expense' expense.id %}" class="reject-link">Reject</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-subtle">
+                        No pending expenses to approve.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

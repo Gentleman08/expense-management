@@ -1,13 +1,173 @@
 <!DOCTYPE html>
-<html>
-<head><title>Submit Expense</title></head>
+{% load static %}
+{% load widget_tweaks %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Expense</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* All the CSS from styles.css is now here */
+        :root {
+            --color-bg-body: #0f172a;
+            --color-bg-card: #1e293b;
+            --color-text-body: #e2e8f0;
+            --color-text-header: #94a3b8;
+            --color-text-accent: #f8fafc;
+            --color-primary-button: #4f46e5;
+            --color-primary-hover: #4338ca;
+            --color-primary-shadow: #4f46e5;
+            --color-form-border: #334155;
+            --color-form-focus: #4f46e5;
+            --color-link-accent: #34d399; /* Emerald */
+            --color-error-bg: #ef4444; /* Red-500 */
+            --color-error-text: #fef2f2;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg-body);
+            color: var(--color-text-body);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--color-bg-card);
+            padding: 2rem 2.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .form-field-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-field-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-text-header);
+            margin-bottom: 0.25rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--color-form-border);
+            background-color: var(--color-bg-card);
+            color: var(--color-text-accent);
+            transition: all 0.2s;
+            line-height: normal;
+        }
+
+        .form-input:focus {
+            border-color: var(--color-form-focus);
+            box-shadow: 0 0 0 1px var(--color-form-focus);
+            outline: none;
+        }
+        
+        .form-input-textarea {
+             min-height: 100px; /* Adjust height for textarea */
+        }
+
+        .error-message {
+            background-color: var(--color-error-bg);
+            color: var(--color-error-text);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--color-form-border);
+            margin-bottom: 1rem;
+        }
+
+        .text-error {
+            color: var(--color-error-bg); /* Use red color for error text */
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background-color: var(--color-primary-button);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-hover);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        .link-accent {
+            color: var(--color-link-accent);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .link-accent:hover {
+            filter: brightness(0.85);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-subtle {
+            color: var(--color-text-header);
+        }
+    </style>
+</head>
 <body>
-    <h2>Submit Expense Claim</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
-    <p><a href="{% url 'expense_history' %}">View Expense History</a></p>
+    <div class="auth-card">
+        
+        <div class="text-center mb-8">
+            <h2 class="text-4xl font-extrabold text-emerald-400 mb-2">Submit Expense Claim</h2>
+            <p class="text-subtle">Fill out the form below to submit a new expense.</p>
+        </div>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="form-field-group">
+                <label for="{{ form.category.id_for_label }}">Category</label>
+                {{ form.category|add_class:"form-input" }}
+                <p class="text-error">{{ form.category.errors }}</p>
+            </div>
+            
+            <div class="form-field-group">
+                <label for="{{ form.amount.id_for_label }}">Amount</label>
+                {{ form.amount|add_class:"form-input" }}
+                <p class="text-error">{{ form.amount.errors }}</p>
+            </div>
+
+            <div class="form-field-group">
+                <label for="{{ form.description.id_for_label }}">Description</label>
+                {{ form.description|add_class:"form-input form-input-textarea" }}
+                <p class="text-error">{{ form.description.errors }}</p>
+            </div>
+
+            <button type="submit" class="btn-primary mt-4">
+                Submit
+            </button>
+        </form>
+
+        <p class="text-center text-subtle mt-6">
+            <a href="{% url 'expense_history' %}" class="link-accent">
+                View Expense History
+            </a>
+        </p>
+    </div>
 </body>
 </html>

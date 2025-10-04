@@ -1,23 +1,123 @@
 <!DOCTYPE html>
-<html>
-<head><title>Admin Dashboard</title></head>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CSS for a consistent dark theme and table styling */
+        :root {
+            --color-bg-body: #0f172a;
+            --color-bg-card: #1e293b;
+            --color-text-body: #e2e8f0;
+            --color-text-header: #94a3b8;
+            --color-text-accent: #f8fafc;
+            --color-link-accent: #34d399; /* Emerald */
+            --color-table-border: #334155;
+            --color-table-header-bg: #1e293b;
+            --color-table-row-even: #1e293b;
+            --color-table-row-odd: #121e2c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg-body);
+            color: var(--color-text-body);
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--color-bg-card);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #34d399; /* Emerald */
+            margin-bottom: 1.5rem;
+        }
+        
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .user-table th,
+        .user-table td {
+            padding: 1rem;
+            border: 1px solid var(--color-table-border);
+            text-align: left;
+        }
+
+        .user-table th {
+            background-color: var(--color-table-header-bg);
+            color: var(--color-text-accent);
+            font-weight: 600;
+        }
+
+        .user-table tr:nth-child(even) {
+            background-color: var(--color-table-row-even);
+        }
+
+        .user-table tr:hover {
+            background-color: #334155; /* Slate-700 */
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .text-subtle {
+            color: var(--color-text-header);
+        }
+    </style>
+</head>
 <body>
-    <h2>Company Users</h2>
-    <table border="1">
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Manager</th>
-        </tr>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.role }}</td>
-            <td>{{ user.manager.username if user.manager else "—" }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="container">
+        <div class="text-center">
+            <h2>Company Users</h2>
+        </div>
+        
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Manager</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ user.manager.username if user.manager else "—" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-subtle">
+                        No users found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
