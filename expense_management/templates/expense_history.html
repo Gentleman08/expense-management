@@ -1,25 +1,172 @@
 <!DOCTYPE html>
-<html>
-<head><title>Expense History</title></head>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CSS for a consistent dark theme and table styling */
+        :root {
+            --color-bg-body: #0f172a;
+            --color-bg-card: #1e293b;
+            --color-text-body: #e2e8f0;
+            --color-text-header: #94a3b8;
+            --color-text-accent: #f8fafc;
+            --color-link-accent: #34d399; /* Emerald */
+            --color-table-border: #334155;
+            --color-table-header-bg: #1e293b;
+            --color-table-row-even: #1e293b;
+            --color-table-row-odd: #121e2c;
+            --color-status-pending: #f97316; /* Orange */
+            --color-status-approved: #22c55e; /* Green */
+            --color-status-rejected: #ef4444; /* Red */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg-body);
+            color: var(--color-text-body);
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px; /* Adjust max-width for wider content like tables */
+            background-color: var(--color-bg-card);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-subtle {
+            color: var(--color-text-header);
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #34d399; /* Emerald */
+            margin-bottom: 1.5rem;
+        }
+
+        /* Table Styling */
+        .expense-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .expense-table th,
+        .expense-table td {
+            padding: 1rem;
+            border: 1px solid var(--color-table-border);
+            text-align: left;
+        }
+
+        .expense-table th {
+            background-color: var(--color-table-header-bg);
+            color: var(--color-text-accent);
+            font-weight: 600;
+        }
+
+        .expense-table tr:nth-child(even) {
+            background-color: var(--color-table-row-even);
+        }
+
+        .expense-table tr:hover {
+            background-color: #334155; /* Slate-700 */
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px; /* Pill shape */
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .status-badge.status-pending {
+            background-color: var(--color-status-pending);
+            color: white;
+        }
+
+        .status-badge.status-approved {
+            background-color: var(--color-status-approved);
+            color: white;
+        }
+
+        .status-badge.status-rejected {
+            background-color: var(--color-status-rejected);
+            color: white;
+        }
+
+        .link-accent {
+            color: var(--color-link-accent);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .link-accent:hover {
+            filter: brightness(0.85);
+        }
+    </style>
+</head>
 <body>
-    <h2>Your Expense History</h2>
-    <table border="1">
-        <tr>
-            <th>Date</th>
-            <th>Category</th>
-            <th>Amount</th>
-            <th>Currency</th>
-            <th>Status</th>
-        </tr>
-        {% for expense in expenses %}
-        <tr>
-            <td>{{ expense.date }}</td>
-            <td>{{ expense.category }}</td>
-            <td>{{ expense.amount }}</td>
-            <td>{{ expense.currency }}</td>
-            <td>{{ expense.status }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="container">
+        <div class="text-center">
+            <h2>Your Expense History</h2>
+        </div>
+        
+        <table class="expense-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.date|date:"F j, Y" }}</td>
+                    <td>{{ expense.category }}</td>
+                    <td>{{ expense.amount|floatformat:2 }} {{ expense.currency }}</td>
+                    <td>
+                        <span class="status-badge status-{{ expense.status|lower }}">
+                            {{ expense.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-subtle">
+                        No expense claims found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p class="text-center mt-8">
+            <a href="{% url 'submit_expense' %}" class="link-accent">
+                Submit a new expense
+            </a>
+        </p>
+    </div>
 </body>
 </html>
