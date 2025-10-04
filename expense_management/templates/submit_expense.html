@@ -8,7 +8,7 @@
     <title>Submit Expense</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* All the CSS from styles.css is now here */
+        /* Your custom CSS variables and styles (unchanged) */
         :root {
             --color-bg-body: #0f172a;
             --color-bg-card: #1e293b;
@@ -17,14 +17,13 @@
             --color-text-accent: #f8fafc;
             --color-primary-button: #4f46e5;
             --color-primary-hover: #4338ca;
-            --color-primary-shadow: #4f46e5;
             --color-form-border: #334155;
             --color-form-focus: #4f46e5;
-            --color-link-accent: #34d399; /* Emerald */
-            --color-error-bg: #ef4444; /* Red-500 */
+            --color-link-accent: #34d399;
+            --color-error-bg: #ef4444;
             --color-error-text: #fef2f2;
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--color-bg-body);
@@ -43,7 +42,6 @@
             padding: 2rem 2.5rem;
             border-radius: 0.75rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
         }
 
         .form-field-group {
@@ -65,8 +63,6 @@
             border: 1px solid var(--color-form-border);
             background-color: var(--color-bg-card);
             color: var(--color-text-accent);
-            transition: all 0.2s;
-            line-height: normal;
         }
 
         .form-input:focus {
@@ -74,22 +70,13 @@
             box-shadow: 0 0 0 1px var(--color-form-focus);
             outline: none;
         }
-        
-        .form-input-textarea {
-             min-height: 100px; /* Adjust height for textarea */
-        }
 
-        .error-message {
-            background-color: var(--color-error-bg);
-            color: var(--color-error-text);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: 1px solid var(--color-form-border);
-            margin-bottom: 1rem;
+        .form-input-textarea {
+            min-height: 100px;
         }
 
         .text-error {
-            color: var(--color-error-bg); /* Use red color for error text */
+            color: var(--color-error-bg);
             font-size: 0.875rem;
             margin-top: 0.25rem;
         }
@@ -101,23 +88,15 @@
             padding: 0.75rem 1rem;
             border-radius: 0.5rem;
             font-weight: 600;
-            transition: all 0.2s;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
 
         .btn-primary:hover {
             background-color: var(--color-primary-hover);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
         }
 
         .link-accent {
             color: var(--color-link-accent);
             font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .link-accent:hover {
-            filter: brightness(0.85);
         }
 
         .text-center {
@@ -131,42 +110,61 @@
 </head>
 <body>
     <div class="auth-card">
-        
         <div class="text-center mb-8">
             <h2 class="text-4xl font-extrabold text-emerald-400 mb-2">Submit Expense Claim</h2>
             <p class="text-subtle">Fill out the form below to submit a new expense.</p>
         </div>
-        
+
         <form method="post" class="space-y-6">
             {% csrf_token %}
-            
+
             <div class="form-field-group">
                 <label for="{{ form.category.id_for_label }}">Category</label>
-                {{ form.category|add_class:"form-input" }}
+                {% render_field form.category class="form-input" %}
                 <p class="text-error">{{ form.category.errors }}</p>
             </div>
-            
+
             <div class="form-field-group">
                 <label for="{{ form.amount.id_for_label }}">Amount</label>
-                {{ form.amount|add_class:"form-input" }}
+                {% render_field form.amount class="form-input" %}
                 <p class="text-error">{{ form.amount.errors }}</p>
             </div>
 
             <div class="form-field-group">
+                <label for="{{ form.currency.id_for_label }}">Currency</label>
+                {% render_field form.currency class="form-input" %}
+                <p class="text-error">{{ form.currency.errors }}</p>
+            </div>
+
+            <div class="form-field-group">
                 <label for="{{ form.description.id_for_label }}">Description</label>
-                {{ form.description|add_class:"form-input form-input-textarea" }}
+                {% render_field form.description class="form-input form-input-textarea" %}
                 <p class="text-error">{{ form.description.errors }}</p>
             </div>
 
-            <button type="submit" class="btn-primary mt-4">
-                Submit
-            </button>
+            <div class="form-field-group">
+                <label for="{{ form.date.id_for_label }}">Date</label>
+                {% render_field form.date class="form-input" %}
+                <p class="text-error">{{ form.date.errors }}</p>
+            </div>
+
+            {% if request.user.is_superuser or request.user.role == 'ADMIN' %}
+            <div class="form-field-group">
+                <label>Submitter</label>
+                <input type="text" value="{{ request.user.username }}" readonly class="form-input" />
+            </div>
+
+            <div class="form-field-group">
+                <label>Status</label>
+                <input type="text" value="pending" readonly class="form-input" />
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn-primary mt-4">Submit</button>
         </form>
 
         <p class="text-center text-subtle mt-6">
-            <a href="{% url 'expense_history' %}" class="link-accent">
-                View Expense History
-            </a>
+            <a href="{% url 'expense_history' %}" class="link-accent">View Expense History</a>
         </p>
     </div>
 </body>
